@@ -10,7 +10,7 @@ export class Cell {
         this._yId = yId;
         this._isMine = isMine;
         this._isHidden = true;
-        this.label = "check";
+        this.label = "?";
     }
 
     private _xId : number;
@@ -45,6 +45,14 @@ export class Cell {
     }
     public set label(v : string) {
         this._label = v;
+    }
+    
+    private _suspicious : boolean;
+    public get suspicious() : boolean {
+        return this._suspicious;
+    }
+    public set suspicious(suspicious : boolean) {
+        this._suspicious = suspicious;
     }
     
 }

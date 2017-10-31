@@ -9,8 +9,10 @@ import { Cell } from './models/cell';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+    private message: string = "Welcome To Minesweeper Game!!";
     private rows: number = 0;
     private columns: number = 0;
+    private tilesRemaining: number = 0;
     private mines: number = 0;
     private mineSweeper: MineSweeper = null;
 
@@ -28,7 +30,8 @@ export class AppComponent implements OnInit {
         if (this.rows && this.columns && this.mines) {
             this.mineSweeper = new MineSweeper(this.mines, this.rows, this.columns);
             this.mineSweeper.initialise();
-            console.log(this.mineSweeper.cells);
+            this.tilesRemaining = this.rows * this.columns - this.mines;
+            this.message = `Remaining tiles - ${this.tilesRemaining}`;
         }
     }
 
@@ -38,13 +41,23 @@ export class AppComponent implements OnInit {
         sessionStorage.setItem('mines', this.mines.toString());
         this.mineSweeper = new MineSweeper(this.mines, this.rows, this.columns);
         this.mineSweeper.initialise();
-        console.log(this.mineSweeper.cells);
+        this.tilesRemaining = this.rows * this.columns - this.mines;
+        this.message = `Remaining tiles - ${this.tilesRemaining}`;
     }
 
     private updateGame(event: any, cell: Cell) {
+        if (!cell.isHidden) {
+            return;
+        }
+        if (event.shiftKey) {
+            cell.suspicious = true;
+            return;
+        }
+        cell.suspicious = false;
         cell.isHidden = false;
         if (cell.isMine) {
-            cell.label = "X"
+            cell.label = "X";
+            this.message = "Mine Exploded!!!!!"
             this.mineSweeper.cells.forEach((cellRow: Array<Cell>) => {
                 cellRow.forEach((cell: Cell) => {
                     if (cell.isMine) {
@@ -52,9 +65,44 @@ export class AppComponent implements OnInit {
                         cell.label = "X";
                     }
                 })
-            })
+            });
         } else {
-            cell.label = "O";
+            let mineCount: number = 0;
+            let colNumber: number = cell.xId;
+            let rowNumber: number = cell.yId;
+            if (this.mineSweeper.cells[rowNumber - 1]) {
+                if (this.mineSweeper.cells[rowNumber - 1][colNumber - 1]) {
+                    mineCount = this.mineSweeper.cells[rowNumber - 1][colNumber - 1].isMine ? ++mineCount : mineCount;
+                }
+                if (this.mineSweeper.cells[rowNumber - 1][colNumber]) {
+                    mineCount = this.mineSweeper.cells[rowNumber - 1][colNumber].isMine ? ++mineCount : mineCount;
+                }
+                if (this.mineSweeper.cells[rowNumber - 1][colNumber + 1]) {
+                    mineCount = this.mineSweeper.cells[rowNumber - 1][colNumber + 1].isMine ? ++mineCount : mineCount;
+                }
+            }
+
+            if (this.mineSweeper.cells[rowNumber][colNumber - 1]) {
+                mineCount = this.mineSweeper.cells[rowNumber][colNumber - 1].isMine ? ++mineCount : mineCount;
+            }
+            if (this.mineSweeper.cells[rowNumber][colNumber + 1]) {
+                mineCount = this.mineSweeper.cells[rowNumber][colNumber + 1].isMine ? ++mineCount : mineCount;
+            }
+
+            if (this.mineSweeper.cells[rowNumber + 1]) {
+                if (this.mineSweeper.cells[rowNumber + 1][colNumber - 1]) {
+                    mineCount = this.mineSweeper.cells[rowNumber + 1][colNumber - 1].isMine ? ++mineCount : mineCount;
+                }
+                if (this.mineSweeper.cells[rowNumber + 1][colNumber]) {
+                    mineCount = this.mineSweeper.cells[rowNumber + 1][colNumber].isMine ? ++mineCount : mineCount;
+                }
+                if (this.mineSweeper.cells[rowNumber + 1][colNumber + 1]) {
+                    mineCount = this.mineSweeper.cells[rowNumber + 1][colNumber + 1].isMine ? ++mineCount : mineCount;
+                }
+            }
+            cell.label = mineCount.toString();
+            --this.tilesRemaining
+            this.message = this.tilesRemaining ? `Remaining tiles - ${this.tilesRemaining}` : "Level Cleared!!";
         }
     }
 }
