@@ -10,7 +10,7 @@ export class Cell {
         this._yId = yId;
         this._isMine = isMine;
         this._isHidden = true;
-        this.label = "?";
+        this.label = "&#10068;";
     }
 
     private _xId : number;

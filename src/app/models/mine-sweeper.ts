@@ -63,7 +63,6 @@ export class MineSweeper {
             }
             if (this.cells[randomX][randomY] && !this.cells[randomX][randomY].isMine) {
                 this.cells[randomX][randomY].isMine = true;
-                // this.cells[randomX][randomY].label = "X";
                 ++mineCount;
             }
         }

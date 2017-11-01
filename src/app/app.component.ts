@@ -10,10 +10,10 @@ import { Cell } from './models/cell';
 })
 export class AppComponent implements OnInit {
     private message: string = "Welcome To Minesweeper Game!!";
-    private rows: number = 0;
-    private columns: number = 0;
+    private rows: number = 10;
+    private columns: number = 10;
     private tilesRemaining: number = 0;
-    private mines: number = 0;
+    private mines: number = 10;
     private mineSweeper: MineSweeper = null;
 
     public ngOnInit(): void {
@@ -51,18 +51,19 @@ export class AppComponent implements OnInit {
         }
         if (event.shiftKey) {
             cell.suspicious = true;
+            cell.label = "&#10069;";
             return;
         }
         cell.suspicious = false;
         cell.isHidden = false;
         if (cell.isMine) {
-            cell.label = "X";
+            cell.label = "&#x2718;";
             this.message = "Mine Exploded!!!!!"
             this.mineSweeper.cells.forEach((cellRow: Array<Cell>) => {
                 cellRow.forEach((cell: Cell) => {
                     if (cell.isMine) {
                         cell.isHidden = false;
-                        cell.label = "X";
+                        cell.label = "&#x2718;";
                     }
                 })
             });
@@ -100,9 +101,45 @@ export class AppComponent implements OnInit {
                     mineCount = this.mineSweeper.cells[rowNumber + 1][colNumber + 1].isMine ? ++mineCount : mineCount;
                 }
             }
-            cell.label = mineCount.toString();
+            cell.label = this.getMineCount(mineCount);
             --this.tilesRemaining
             this.message = this.tilesRemaining ? `Remaining tiles - ${this.tilesRemaining}` : "Level Cleared!!";
         }
+    }
+
+    private getMineCount(count: number): string {
+        let label: string = "";
+        switch(count) {
+            case 0:
+                label = "&#10061;";
+                break;
+            case 1:
+                label = "&#10112;";
+                break;
+            case 2:
+                label = "&#10113;";
+                break;
+            case 3:
+                label = "&#10114;";
+                break;
+            case 4:
+                label = "&#10115;";
+                break;
+            case 5:
+                label = "&#10116;";
+                break;
+            case 6:
+                label = "&#10117;";
+                break;
+            case 7:
+                label = "&#10118;";
+                break;
+            case 8:
+                label = "&#10118;";
+                break;
+            default: 
+                break;
+        }
+        return label;
     }
 }

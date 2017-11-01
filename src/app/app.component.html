@@ -5,51 +5,70 @@
             <h1 class="text-center">Create New Game</h1>
             <hr>
             <div class="row">
-                <div class="row">
-                    <div class="form-group col-lg-12">
-                        <label for="columns">Row Count</label>
-                        <label>(Min 5, Max 10)</label>
-                        <input id="columns" [class.error]="!columns || columns <= 4 || columns > 10" class="form-control" type="number" [(ngModel)]="columns">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-lg-12">
-                        <label for="rows">Column Count (Min 5, Max 10)</label>
-                        <input id="rows" [class.error]="!rows || rows <= 4 || rows > 10" class="form-control" type="number" [(ngModel)]="rows">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-lg-12">
-                        <label for="mines">Mine Count (Min 1, Less Than Row * Column)</label>
-                        <input id="mines" [class.error]="!mines || mines == 0" class="form-control" type="number" [(ngModel)]="mines">
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="form-group col-lg-12">
-                        <button class="btn btn-primary col-lg-12" (click)="createMineSweeper()" [disabled]="(!rows || rows <= 4 || rows > 10) || (!columns || columns <= 4 || columns > 10) || (!mines || mines == 0 || rows * columns < mines)">
-                            Create Mine Sweeper
-                        </button>
-                    </div>
+                <div class="form-group col-lg-12">
+                    <label for="columns">Row Count</label>
+                    <label>(Min 5, Max 10)</label>
+                    <input id="columns" [class.error]="!columns || columns <= 4 || columns > 10" class="form-control" type="number" [(ngModel)]="columns">
                 </div>
             </div>
-            <ul style="padding:0;">
-                <li>Start by clicking a random button with `?` text to check if it's a mine.</li>
-                <li>Keep Shift button pressed while cliking a button to mark it suspicious.</li>
-                <li>Click suspicious button to check if it's a mine.</li>
-            </ul>
+            <div class="row">
+                <div class="form-group col-lg-12">
+                    <label for="rows">Column Count (Min 5, Max 10)</label>
+                    <input id="rows" [class.error]="!rows || rows <= 4 || rows > 10" class="form-control" type="number" [(ngModel)]="rows">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-12">
+                    <label for="mines">Mine Count (Min 1, Max {{rows * columns - 1}})</label>
+                    <input id="mines" [class.error]="!mines || mines == 0" class="form-control" type="number" [(ngModel)]="mines">
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="form-group col-lg-12">
+                    <button class="btn btn-lg btn-primary col-lg-12" (click)="createMineSweeper()" [disabled]="(!rows || rows <= 4 || rows > 10) || (!columns || columns <= 4 || columns > 10) || (!mines || mines == 0 || rows * columns < mines)">
+                        Create Mine Sweeper
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <ul>
+                    <li>Start by clicking a random unverified cell to check if it's a mine.</li>
+                    <li>Create a suspicious cell if you are unsure if it's a mine.</li>
+                    <li>To do this hold the Shift button whilst clicking the cell to mark it suspicious.</li>
+                    <li>Refer following legends for different cell types -</li>
+                </ul>
+            </div>
+            <div class="row" class="text-center">
+                <div class="col-lg-3">
+                    <button id="unverified" class="btn btn-sm btn-primary cell">&#10068;</button>
+                    <label for="unverified">unverified cell</label>
+                </div>
+                <div class="col-lg-3">
+                    <button id="checked" class="btn btn-sm btn-success cell">&#10112;</button>
+                    <label for="checked">cell with 1 mine around</label>
+                </div>
+                <div class="col-lg-3">
+                    <button id="suspicious" class="btn btn-sm btn-warning cell">&#10069;</button>
+                    <label for="suspicious">suspicious cell</label>
+                </div>
+                <div class="col-lg-3">
+                    <button id="mine" class="btn btn-sm btn-danger cell">&#x2718;</button>
+                    <label for="mine">cell with mine</label>
+                </div>
+            </div>
         </div>
         <div class="col-lg-7 text-center">
             <h1 class="title text-center" [class.text-danger]="message === 'Mine Exploded!!!!!'" [class.text-success]="!tilesRemaining">{{message}}</h1>
             <br>
             <div *ngFor="let cellRow of mineSweeper?.cells">
-                <button *ngFor="let cell of cellRow" class="btn btn-primary cell" #btn 
-                    [disabled]="message === 'Mine Exploded!!!!!'"
+                <button *ngFor="let cell of cellRow" 
+                    class="btn btn-primary cell" #btn 
+                    [disabled]="message === 'Mine Exploded!!!!!'" 
                     [class.btn-success]="!cell.isHidden && !cell.isMine && !cell.suspicious"
-                    [class.btn-danger]="!cell.isHidden && cell.isMine && !cell.suspicious" 
-                    [class.btn-warning]="cell.suspicious"
-                    (click)="updateGame($event, cell)">
-                    {{cell.label}}
+                    [class.btn-danger]="!cell.isHidden && cell.isMine && !cell.suspicious" [class.btn-warning]="cell.suspicious"
+                    (click)="updateGame($event, cell)"
+                    [innerHtml]="cell.label">
                 </button>
             </div>
         </div>
