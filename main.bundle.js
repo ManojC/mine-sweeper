@@ -25,7 +25,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".cell {\n    height: 45px;\n    width: 45px;\n    margin: 5px;\n    padding: 0\n}\n\n.error {\n    border: thin red solid;\n}\n\nbutton.success, button.warning {\n    font-weight: bold;\n    color: black;\n}\n\nh1 {\n    margin-bottom: 0;\n    padding-bottom: 0;\n}", ""]);
+exports.push([module.i, ".cell {\n    height: 45px;\n    width: 45px;\n    margin: 5px;\n    padding: 0;\n    font-size: 30px;\n    font-weight: bold;\n}\n\n.error {\n    border: thin red solid;\n}\n\nbutton.success, button.warning {\n    font-weight: bold;\n    color: black;\n}\n\nh1 {\n    margin-bottom: 0;\n    padding-bottom: 0;\n}", ""]);
 
 // exports
 
@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-lg-5\">\n            <hr>\n            <h1 class=\"text-center\">Create New Game</h1>\n            <hr>\n            <div class=\"row\">\n                <div class=\"row\">\n                    <div class=\"form-group col-lg-12\">\n                        <label for=\"columns\">Row Count</label>\n                        <label>(Min 5, Max 10)</label>\n                        <input id=\"columns\" [class.error]=\"!columns || columns <= 4 || columns > 10\" class=\"form-control\" type=\"number\" [(ngModel)]=\"columns\">\n                    </div>\n                </div>\n                <div class=\"row\">\n                    <div class=\"form-group col-lg-12\">\n                        <label for=\"rows\">Column Count (Min 5, Max 10)</label>\n                        <input id=\"rows\" [class.error]=\"!rows || rows <= 4 || rows > 10\" class=\"form-control\" type=\"number\" [(ngModel)]=\"rows\">\n                    </div>\n                </div>\n                <div class=\"row\">\n                    <div class=\"form-group col-lg-12\">\n                        <label for=\"mines\">Mine Count (Min 1, Less Than Row * Column)</label>\n                        <input id=\"mines\" [class.error]=\"!mines || mines == 0\" class=\"form-control\" type=\"number\" [(ngModel)]=\"mines\">\n                    </div>\n                </div>\n                <br>\n                <div class=\"row\">\n                    <div class=\"form-group col-lg-12\">\n                        <button class=\"btn btn-primary col-lg-12\" (click)=\"createMineSweeper()\" [disabled]=\"(!rows || rows <= 4 || rows > 10) || (!columns || columns <= 4 || columns > 10) || (!mines || mines == 0 || rows * columns < mines)\">\n                            Create Mine Sweeper\n                        </button>\n                    </div>\n                </div>\n            </div>\n            <ul style=\"padding:0;\">\n                <li>Start by clicking a random button with `?` text to check if it's a mine.</li>\n                <li>Keep Shift button pressed while cliking a button to mark it suspicious.</li>\n                <li>Click suspicious button to check if it's a mine.</li>\n            </ul>\n        </div>\n        <div class=\"col-lg-7 text-center\">\n            <h1 class=\"title text-center\" [class.text-danger]=\"message === 'Mine Exploded!!!!!'\" [class.text-success]=\"!tilesRemaining\">{{message}}</h1>\n            <br>\n            <div *ngFor=\"let cellRow of mineSweeper?.cells\">\n                <button *ngFor=\"let cell of cellRow\" class=\"btn btn-primary cell\" #btn \n                    [disabled]=\"message === 'Mine Exploded!!!!!'\"\n                    [class.btn-success]=\"!cell.isHidden && !cell.isMine && !cell.suspicious\"\n                    [class.btn-danger]=\"!cell.isHidden && cell.isMine && !cell.suspicious\" \n                    [class.btn-warning]=\"cell.suspicious\"\n                    (click)=\"updateGame($event, cell)\">\n                    {{cell.label}}\n                </button>\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-lg-5\">\n            <hr>\n            <h1 class=\"text-center\">Create New Game</h1>\n            <hr>\n            <div class=\"row\">\n                <div class=\"form-group col-lg-12\">\n                    <label for=\"columns\">Row Count</label>\n                    <label>(Min 5, Max 10)</label>\n                    <input id=\"columns\" [class.error]=\"!columns || columns <= 4 || columns > 10\" class=\"form-control\" type=\"number\" [(ngModel)]=\"columns\">\n                </div>\n            </div>\n            <div class=\"row\">\n                <div class=\"form-group col-lg-12\">\n                    <label for=\"rows\">Column Count (Min 5, Max 10)</label>\n                    <input id=\"rows\" [class.error]=\"!rows || rows <= 4 || rows > 10\" class=\"form-control\" type=\"number\" [(ngModel)]=\"rows\">\n                </div>\n            </div>\n            <div class=\"row\">\n                <div class=\"form-group col-lg-12\">\n                    <label for=\"mines\">Mine Count (Min 1, Max {{rows * columns - 1}})</label>\n                    <input id=\"mines\" [class.error]=\"!mines || mines == 0\" class=\"form-control\" type=\"number\" [(ngModel)]=\"mines\">\n                </div>\n            </div>\n            <br>\n            <div class=\"row\">\n                <div class=\"form-group col-lg-12\">\n                    <button class=\"btn btn-lg btn-primary col-lg-12\" (click)=\"createMineSweeper()\" [disabled]=\"(!rows || rows <= 4 || rows > 10) || (!columns || columns <= 4 || columns > 10) || (!mines || mines == 0 || rows * columns < mines)\">\n                        Create Mine Sweeper\n                    </button>\n                </div>\n            </div>\n            <div class=\"row\">\n                <ul>\n                    <li>Start by clicking a random unverified cell to check if it's a mine.</li>\n                    <li>Create a suspicious cell if you are unsure if it's a mine.</li>\n                    <li>To do this hold the Shift button whilst clicking the cell to mark it suspicious.</li>\n                    <li>Refer following legends for different cell types -</li>\n                </ul>\n            </div>\n            <div class=\"row\" class=\"text-center\">\n                <div class=\"col-lg-3\">\n                    <button id=\"unverified\" class=\"btn btn-sm btn-primary cell\">&#10068;</button>\n                    <label for=\"unverified\">unverified cell</label>\n                </div>\n                <div class=\"col-lg-3\">\n                    <button id=\"checked\" class=\"btn btn-sm btn-success cell\">&#10112;</button>\n                    <label for=\"checked\">cell with 1 mine around</label>\n                </div>\n                <div class=\"col-lg-3\">\n                    <button id=\"suspicious\" class=\"btn btn-sm btn-warning cell\">&#10069;</button>\n                    <label for=\"suspicious\">suspicious cell</label>\n                </div>\n                <div class=\"col-lg-3\">\n                    <button id=\"mine\" class=\"btn btn-sm btn-danger cell\">&#x2718;</button>\n                    <label for=\"mine\">cell with mine</label>\n                </div>\n            </div>\n        </div>\n        <div class=\"col-lg-7 text-center\">\n            <h1 class=\"title text-center\" [class.text-danger]=\"message === 'Mine Exploded!!!!!'\" [class.text-success]=\"!tilesRemaining\">{{message}}</h1>\n            <br>\n            <div *ngFor=\"let cellRow of mineSweeper?.cells\">\n                <button *ngFor=\"let cell of cellRow\" \n                    class=\"btn btn-primary cell\" #btn \n                    [disabled]=\"message === 'Mine Exploded!!!!!'\" \n                    [class.btn-success]=\"!cell.isHidden && !cell.isMine && !cell.suspicious\"\n                    [class.btn-danger]=\"!cell.isHidden && cell.isMine && !cell.suspicious\" [class.btn-warning]=\"cell.suspicious\"\n                    (click)=\"updateGame($event, cell)\"\n                    [innerHtml]=\"cell.label\">\n                </button>\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -60,10 +60,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var AppComponent = (function () {
     function AppComponent() {
         this.message = "Welcome To Minesweeper Game!!";
-        this.rows = 0;
-        this.columns = 0;
+        this.rows = 10;
+        this.columns = 10;
         this.tilesRemaining = 0;
-        this.mines = 0;
+        this.mines = 10;
         this.mineSweeper = null;
     }
     AppComponent.prototype.ngOnInit = function () {
@@ -98,18 +98,19 @@ var AppComponent = (function () {
         }
         if (event.shiftKey) {
             cell.suspicious = true;
+            cell.label = "&#10069;";
             return;
         }
         cell.suspicious = false;
         cell.isHidden = false;
         if (cell.isMine) {
-            cell.label = "X";
+            cell.label = "&#x2718;";
             this.message = "Mine Exploded!!!!!";
             this.mineSweeper.cells.forEach(function (cellRow) {
                 cellRow.forEach(function (cell) {
                     if (cell.isMine) {
                         cell.isHidden = false;
-                        cell.label = "X";
+                        cell.label = "&#x2718;";
                     }
                 });
             });
@@ -146,10 +147,45 @@ var AppComponent = (function () {
                     mineCount = this.mineSweeper.cells[rowNumber + 1][colNumber + 1].isMine ? ++mineCount : mineCount;
                 }
             }
-            cell.label = mineCount.toString();
+            cell.label = this.getMineCount(mineCount);
             --this.tilesRemaining;
             this.message = this.tilesRemaining ? "Remaining tiles - " + this.tilesRemaining : "Level Cleared!!";
         }
+    };
+    AppComponent.prototype.getMineCount = function (count) {
+        var label = "";
+        switch (count) {
+            case 0:
+                label = "&#10061;";
+                break;
+            case 1:
+                label = "&#10112;";
+                break;
+            case 2:
+                label = "&#10113;";
+                break;
+            case 3:
+                label = "&#10114;";
+                break;
+            case 4:
+                label = "&#10115;";
+                break;
+            case 5:
+                label = "&#10116;";
+                break;
+            case 6:
+                label = "&#10117;";
+                break;
+            case 7:
+                label = "&#10118;";
+                break;
+            case 8:
+                label = "&#10118;";
+                break;
+            default:
+                break;
+        }
+        return label;
     };
     return AppComponent;
 }());
@@ -224,7 +260,7 @@ var Cell = (function () {
         this._yId = yId;
         this._isMine = isMine;
         this._isHidden = true;
-        this.label = "?";
+        this.label = "&#10068;";
     }
     Object.defineProperty(Cell.prototype, "xId", {
         get: function () {
@@ -367,7 +403,6 @@ var MineSweeper = (function () {
             }
             if (this.cells[randomX][randomY] && !this.cells[randomX][randomY].isMine) {
                 this.cells[randomX][randomY].isMine = true;
-                // this.cells[randomX][randomY].label = "X";
                 ++mineCount;
             }
         }
