@@ -11,12 +11,30 @@
     border: thin red solid;
 }
 
-button.success, button.warning {
-    font-weight: bold;
-    color: black;
+button {
+    font-weight: bold !important;
+    color: black !important;
 }
 
-h1 {
-    margin-bottom: 0;
-    padding-bottom: 0;
+.animate-me {
+    animation: 0.3s infinite bgcolorchange;
+}
+
+@keyframes bgcolorchange {
+    0% {
+        background-color: yellow;
+        color: blue;
+    }
+    33% {
+        background-color: blue;
+        color: red;
+    }
+    66% {
+        background-color: red;
+        color: green;
+    }
+    100% {
+        background-color: green;
+        color: black;
+    }
 }

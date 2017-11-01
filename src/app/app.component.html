@@ -1,7 +1,6 @@
 <div class="container">
     <div class="row">
-        <div class="col-lg-5">
-            <hr>
+        <div class="col-lg-4">
             <h1 class="text-center">Create New Game</h1>
             <hr>
             <div class="row">
@@ -23,7 +22,6 @@
                     <input id="mines" [class.error]="!mines || mines == 0" class="form-control" type="number" [(ngModel)]="mines">
                 </div>
             </div>
-            <br>
             <div class="row">
                 <div class="form-group col-lg-12">
                     <button class="btn btn-lg btn-primary col-lg-12" (click)="createMineSweeper()" [disabled]="(!rows || rows <= 4 || rows > 10) || (!columns || columns <= 4 || columns > 10) || (!mines || mines == 0 || rows * columns < mines)">
@@ -58,15 +56,21 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-7 text-center">
-            <h1 class="title text-center" [class.text-danger]="message === 'Mine Exploded!!!!!'" [class.text-success]="!tilesRemaining">{{message}}</h1>
+        <div class="col-lg-8 text-center">
+            <h1 class="title text-center" 
+                [class.text-danger]="message === 'Mine Exploded!!!!!'" 
+                [class.text-success]="!tilesRemaining">
+                {{message}}
+            </h1>
             <br>
             <div *ngFor="let cellRow of mineSweeper?.cells">
                 <button *ngFor="let cell of cellRow" 
                     class="btn btn-primary cell" #btn 
                     [disabled]="message === 'Mine Exploded!!!!!'" 
                     [class.btn-success]="!cell.isHidden && !cell.isMine && !cell.suspicious"
-                    [class.btn-danger]="!cell.isHidden && cell.isMine && !cell.suspicious" [class.btn-warning]="cell.suspicious"
+                    [class.btn-danger]="!cell.isHidden && cell.isMine && !cell.suspicious"
+                    [class.btn-warning]="cell.suspicious"
+                    [class.animate-me]="!tilesRemaining"
                     (click)="updateGame($event, cell)"
                     [innerHtml]="cell.label">
                 </button>
