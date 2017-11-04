@@ -32,8 +32,8 @@
             <div class="row">
                 <ul>
                     <li>Start by clicking a random unverified cell to check if it's a mine.</li>
-                    <li>Create a suspicious cell if you are unsure if it's a mine.</li>
-                    <li>To do this hold the Shift button whilst clicking the cell to mark it suspicious.</li>
+                    <li>Single click will make the cell suspicious.</li>
+                    <li>Click suspicious cell to verify if it's a mine.</li>
                     <li>Refer following legends for different cell types -</li>
                 </ul>
             </div>
@@ -67,9 +67,9 @@
                 <button *ngFor="let cell of cellRow" 
                     class="btn btn-primary cell" #btn 
                     [disabled]="message === 'Mine Exploded!!!!!'" 
-                    [class.btn-success]="!cell.isHidden && !cell.isMine && !cell.suspicious"
-                    [class.btn-danger]="!cell.isHidden && cell.isMine && !cell.suspicious"
-                    [class.btn-warning]="cell.suspicious"
+                    [class.btn-success]="!cell.isHidden && !cell.isMine"
+                    [class.btn-danger]="!cell.isHidden && cell.isMine"
+                    [class.btn-warning]="cell.suspicious && cell.isHidden"
                     [class.animate-me]="!tilesRemaining"
                     (click)="updateGame($event, cell)"
                     [innerHtml]="cell.label">

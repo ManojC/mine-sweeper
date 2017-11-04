@@ -49,12 +49,11 @@ export class AppComponent implements OnInit {
         if (!cell.isHidden) {
             return;
         }
-        if (event.shiftKey) {
+        if (!cell.suspicious) {
             cell.suspicious = true;
             cell.label = "&#10069;";
             return;
         }
-        cell.suspicious = false;
         cell.isHidden = false;
         if (cell.isMine) {
             cell.label = "&#x2718;";
