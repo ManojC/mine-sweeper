@@ -24,20 +24,20 @@
             </div>
             <div class="row">
                 <div class="form-group col-lg-12">
-                    <button class="btn btn-lg btn-primary col-lg-12" (click)="createMineSweeper()" [disabled]="(!rows || rows <= 4 || rows > 10) || (!columns || columns <= 4 || columns > 10) || (!mines || mines == 0 || rows * columns < mines)">
+                    <button class="btn btn-lg btn-primary col-lg-12 col-xs-12" (click)="createMineSweeper()" [disabled]="(!rows || rows <= 4 || rows > 10) || (!columns || columns <= 4 || columns > 10) || (!mines || mines == 0 || rows * columns < mines)">
                         Create Mine Sweeper
                     </button>
                 </div>
             </div>
             <div class="row">
-                <ul>
+                <ul class="mal">
                     <li>Start by clicking a random unverified cell to check if it's a mine.</li>
                     <li>Single click will make the cell suspicious.</li>
                     <li>Click suspicious cell to verify if it's a mine.</li>
                     <li>Refer following legends for different cell types -</li>
                 </ul>
             </div>
-            <div class="row" class="text-center">
+            <div class="row" class="text-left">
                 <div class="col-lg-3">
                     <button id="unverified" class="btn btn-sm btn-primary cell">&#10068;</button>
                     <label for="unverified">unverified cell</label>
@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-8 text-center">
+        <div class="col-lg-8 text-center mine-sweeper">
             <h1 class="title text-center" 
                 [class.text-danger]="message === 'Mine Exploded!!!!!'" 
                 [class.text-success]="!tilesRemaining">

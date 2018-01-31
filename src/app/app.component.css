@@ -1,3 +1,11 @@
+.mal {
+    margin: 10px;
+}
+
+.mine-sweeper {
+    min-width: 600px;
+}
+
 .cell {
     height: 45px;
     width: 45px;
