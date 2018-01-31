@@ -9,12 +9,12 @@ import { Cell } from './models/cell';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-    private message: string = "Welcome To Minesweeper Game!!";
-    private rows: number = 10;
-    private columns: number = 10;
-    private tilesRemaining: number = 0;
-    private mines: number = 10;
-    private mineSweeper: MineSweeper = null;
+    public message: string = "Welcome To Minesweeper Game!!";
+    public rows: number = 10;
+    public columns: number = 10;
+    public tilesRemaining: number = 0;
+    public mines: number = 10;
+    public mineSweeper: MineSweeper = null;
 
     public ngOnInit(): void {
         if (sessionStorage.getItem("rows")) {
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
         }
     }
 
-    private createMineSweeper(): void {
+    public createMineSweeper(): void {
         sessionStorage.setItem('rows', this.rows.toString());
         sessionStorage.setItem('columns', this.columns.toString());
         sessionStorage.setItem('mines', this.mines.toString());
